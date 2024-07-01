@@ -1,0 +1,38 @@
+[
+    {
+      "username": "Annie",
+      "room": "Vue",
+      "text": "How to use props in Vue?",
+      "time": "2024/10/06 15:05"
+    },
+    {
+      "username": "Steven",
+      "room": "Vue",
+      "text": "It's easy! You just need to pass the data from the parent component to the child component using props.",
+      "time": "2024/10/06 15:06"
+    },
+    {
+      "username": "Andreea",
+      "room": "Vue",
+      "text": "And don't forget to define the props in the child component.",
+      "time": "2024/10/06 15:07"
+    },
+    {
+      "username": "Steven",
+      "room": "Vue",
+      "text": "Please let me know if you need more help!",
+      "time": "2024/10/06 15:08"
+    },
+    {
+      "username": "Annie",
+      "room": "Vue",
+      "text": "Thank you!",
+      "time": "2024/10/06 15:09"
+    },
+    {
+      "username": "Andreea",
+      "room": "Vue",
+      "text": "No problem! Happy coding!",
+      "time": "2024/10/06 15:10"
+    }
+]

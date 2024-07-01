@@ -15,7 +15,7 @@
                 Chat Groups
             </p>
             <div class="flex flex-col justify-between">
-                <div v-for="chat in chatData" :key="chat.room">
+                <div v-for="chat in chatRoomData" :key="chat.room">
                     <div class="flex flex-col justify-start" style="margin: 0.5rem 0.5rem 0 0.5rem;">
                         <div class="flex flex-row justify-start">
                             <div style="flex: 1;" class="flex flex-row justify-center align-center px-1">
@@ -36,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <div class="custom-card ml-2 mr-3 flex flex-col justify-between" style="width: 70%; height: 95vh;">
+        <div class="custom-card ml-2 mr-3 flex flex-col justify-start" style="width: 70%; height: 95vh; overflow: hidden;">
             <div class="flex flex-col justify-start">
                 <div class="flex flex-row justify-between items-center" style="margin: 1rem 1rem 0 1rem;">
                     <div class="flex flex-row justify-start">
@@ -54,13 +54,15 @@
                 </div>
                 <hr style="width: 95%; border: none; height: 2px; background-color: #e5e7eb; margin: 0 auto;">
             </div>
-            <p class="m-5" style="flex: 1;">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-                quas!
+            <p style="flex: 1" class="m-5 overflow-y-auto">
+                 <div class="user" v-for="(chat, index) in chatData" :key="index" :class="{ 'local': chat.username == 'Andreea', 'remote': chat.username != 'Andreea'}">
+                    <div class="name" v-if="chat.username != 'Andreea'">{{ chat.username }}</div>
+                    <div class="text">{{ chat.text }}</div>
+                </div>
             </p>
-            <div class="flex flex-row justify-start m-3">
-                <InputText type="text" class="bg-slate-100 border-none mx-3" style="width: 90%;"/>
-                <Button icon="pi pi-send" class="mx-3 square-button" />
+            <div class="flex flex-row justify-start m-3" >
+                <InputText type="text" class="bg-slate-100 border-none mx-3" style="width: 95%;"/>
+                <Button icon="pi pi-send" class="mx-3 square"/>
             </div>
         </div>
     </div>
@@ -73,22 +75,30 @@ import Avatar from 'primevue/avatar';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import { ref, onMounted } from "vue";
-import { type chat } from '../models/shared';
-import json from '../assets/data.json'
+import { type chat, type chatRoom } from '../models/shared';
+import chatRoomjson from '../assets/chatRoomData.json'
+import chatjson from '../assets/chatData.json'
 
 const items = ref([
     { icon: 'pi pi-comment' },
     { icon: 'pi pi-home' }
 ]);
 
+const chatRoomData = ref<chatRoom[]>([]);
 const chatData = ref<chat[]>([]);
 
+const getChatRoomData = async () => {
+    chatRoomData.value = chatRoomjson;
+    console.log(chatRoomData.value);
+}
+
 const getChatData = async () => {
-    chatData.value = json;
+    chatData.value = chatjson;
     console.log(chatData.value);
 }
 
 onMounted(() => {
+    getChatRoomData();
     getChatData();
 });
 
@@ -146,11 +156,91 @@ $primary-color: #f59e0b;
     border-radius: 6px;
 }
 
-.square-button {
-    width: 10%;
-    // padding-top: calc(10% - 2 * 0.75rem); /* Adjust padding to keep it square, considering margin */
-    // padding-bottom: calc(10% - 2 * 0.75rem); /* Adjust padding to keep it square, considering margin */
-    // height: auto;
+.square {
+  position: relative;
+  width: 5%;
+}
+
+.square:after {
+  content: "";
+  display: block;
+  padding-bottom: 50%;
+}
+
+.content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.user {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+  .text {
+    background-color: #aaa;
+    padding: 16px;
+    border-radius: 10px;
+    position: relative;
+  }
+}
+
+.remote {
+    flex-direction: column;
+    margin-left: 35px;
+  .name {
+    font-size: 0.8rem;
+    color: #aaa;
+  }
+  .text {
+    margin-right: 80px;
+    color: #eee;
+    background-color: #f59e0b;
+    opacity: 0.7;
+    &::after {
+      border-right: 10px solid #f59e0b;
+      left: -10px;
+    }
+  }
+}
+
+.local {
+  justify-content: flex-end;
+  .text {
+    margin-right: 35px;
+    margin-left: 80px;
+    order: -1;
+    background-color: #fff;
+    border: #aaa 1px solid;
+    color: #333;
+    &::after {
+      border-left: 10px solid #fff;
+      right: -10px;
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      top: 19px;
+      right: -11px;
+      border-width: 11px 0px 11px 11px;
+      border-color: transparent transparent transparent #aaa;
+    }
+  }
+}
+
+.remote,
+.local {
+  & .text::after {
+    content: "";
+    position: absolute;
+    top: 20px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+  }
+  .text {
+    font-weight: 500;
+    box-shadow: 0 0 2px #888;
+  }
 }
 
 @media (width < 768px){
